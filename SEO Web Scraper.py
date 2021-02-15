@@ -12,7 +12,7 @@ class scraper():
 
         options = webdriver.ChromeOptions()
         options.headless = True
-        driver = webdriver.Chrome(executable_path="C:\\Users\\Mukul\\PycharmProjects\\pythonProject\\SeleniumScripts\\chromedriver.exe", options=options)
+        driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
         driver.get(self.url)
         src = driver.page_source
         soup = bs(src, features = "html.parser")
@@ -86,7 +86,7 @@ class scraper():
         print(self.h2)
 
 
-scrape = scraper('https://www.healthkart.com')
+scrape = scraper('Insert the URL')
 scrape.run_scraper()
 scrape.check_h1()
 scrape.check_title()
