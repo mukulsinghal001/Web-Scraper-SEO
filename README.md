@@ -8,4 +8,6 @@ In future, I am looking to add some features which I will share it soon!
 
 Enjoy, also please scrap the website on your own risk..!!!!!
 
+<b>Note:</b> Please change the path of the Chrome Driver which I have provied in my Github repository with name "chromedriver.exe".
+
 <img src = 'https://github.com/mukulsinghal001/Web-Scraper-SEO/blob/main/Working_Demo.png'>
