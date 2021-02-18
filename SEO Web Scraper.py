@@ -9,46 +9,70 @@ class scraper():
         self.url = url
 
     def run_scraper(self):
-
-        options = webdriver.ChromeOptions()
+        
+        options = webdriver.ChromeOptions() # Configuring to run the chrome into the headless mode
         options.headless = True
-        driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
+        driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options) # Add the chrome driver path here
         driver.get(self.url)
         src = driver.page_source
         soup = bs(src, features = "html.parser")
 
         # reading the head of the webpage
-
         head = soup.find('head')
 
         # extracting the title of the page
-        self.page_title = head.find("title").get_text()
+        if head.find("title") == None:
+            self.page_title = "Title Not Found!"
+        else:
+            self.page_title = head.find("title").get_text()
 
         # extracting the page description
-        page_description = head.find(attrs = {"name": 'description'})
-        self.page_description = page_description["content"]
+        if head.find(attrs = {"name": 'description'}) == None:
+            page_description = "Description Not Found!"
+            self.page_description = page_description
+        else:
+            page_description = head.find(attrs = {"name": 'description'})
+            self.page_description = page_description["content"]
+
 
         # extracting the meta keywords of the page
-        meta_key = head.find('meta', attrs = {"name": "keywords"})
-        self.meta_keywords = meta_key["content"]
+        if head.find('meta', attrs = {"name": "keywords"}) == None:
+            meta_key = "Keywords Not Found..!!"
+            self.meta_keywords = meta_key
+        else:
+            meta_key = head.find('meta', attrs = {"name": "keywords"})
+            self.meta_keywords = meta_key["content"]
 
         # extracting the page h1
-        self.h1 = soup.find("h1").get_text()
+        if soup.find("h1") == None:
+            self.h1 = "H1 Not Found...!!!!"
+        else:
+            self.h1 = soup.find("h1").get_text()
 
         # extracting the page h2
-        h2_list = soup.find_all("h2")
-        self.h2 = [i.get_text().strip() for i in h2_list]
+        if soup.find_all("h2") == None:
+            h2_list = "H2 Not Found..!!!"
+            self.h2 = h2_list
+        else:
+            h2_list = soup.find_all("h2")
+            self.h2 = [i.get_text().strip() for i in h2_list]
 
         # extracting the image alt tags of the page
-        alt_tags_list = [key.get('alt') for key in soup.find_all("img")]
+
+        alt_tags_list = []
+
+        for key in soup.find_all("img"):
+            if key == None:
+                alt_tags_list.append("Tags Not Found")
+            else:
+                alt_tags_list.append(key.get("alt"))
 
         # cleaning of alt tags list
-        modified_alt_tags = []
-        self.modified_alt_tags = modified_alt_tags
+        self.modified_alt_tags = []
 
         for i in alt_tags_list:
-            if i not in re.findall(".*svg$|.*png", str(i)):
-                modified_alt_tags.append(i)
+            if i not in re.findall(".*svg$|.*png|.*jpg|.*jpeg|.*pdf", str(i)):
+                self.modified_alt_tags.append(i)
             else:
                 pass
 
@@ -86,12 +110,12 @@ class scraper():
         print(self.h2)
 
 
-scrape = scraper('Insert the URL')
-scrape.run_scraper()
-scrape.check_h1()
-scrape.check_title()
-scrape.check_description()
-scrape.check_keywords()
-scrape.check_alt_tags()
-scrape.check_h2()
-scrape.check_int_links()
+scrape = scraper("Insert the Website URL")
+scrape.run_scraper() # Run the Scraper
+scrape.check_title() # Check the title of the Page
+scrape.check_description() # Check the Description of the Page
+scrape.check_h1() # Check the H1 of the Page
+scrape.check_h2() # Check the H2's of the Page
+scrape.check_keywords() # Check for the meta keywords of the Page
+scrape.check_alt_tags() # Check for the alt image tags
+scrape.check_int_links() # Check for the internal links along with the anchors 
